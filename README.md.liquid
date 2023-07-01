@@ -1,0 +1,29 @@
+# {{project-name}}
+
+An auto splitter for {{ process_name | remove: ".exe" | replace: "-", " " | replace: "_", " " | capitalize }}.
+
+## Compilation
+
+This auto splitter is written in Rust. In order to compile it, you need to
+install the Rust compiler: [Install Rust](https://www.rust-lang.org/tools/install).
+
+Afterwards install the WebAssembly target:
+```sh
+rustup target add {% if use_wasi %}wasm32-wasi{% else %}wasm32-unknown-unknown{% endif %} --toolchain {{toolchain}}
+```
+
+The auto splitter can now be compiled:
+```sh
+cargo b
+```
+
+The auto splitter is then available at:
+```
+target/{% if use_wasi %}wasm32-wasi{% else %}wasm32-unknown-unknown{% endif %}/release/{{project-name | replace: "-", "_" }}.wasm
+```
+
+Make sure too look into the [API documentation](https://livesplit.org/asr/asr/) for the `asr` crate.
+
+You can use the [debugger](https://github.com/CryZe/asr-debugger) while
+developing the auto splitter to more easily see the log messages, statistics,
+dump memory and more.

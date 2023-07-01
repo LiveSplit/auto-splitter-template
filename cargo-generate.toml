@@ -1,0 +1,25 @@
+[placeholders.use_wasi]
+type = "bool"
+prompt = "Do you want to use WASI? It allows accessing the file system, but it is unstable."
+default = false
+
+[placeholders.use_std]
+type = "bool"
+prompt = "Do you need the full access to the standard library?"
+default = false
+
+[placeholders.toolchain]
+type = "string"
+prompt = "Which Rust toolchain do you want to use?"
+choices = ["stable", "nightly"]
+default = "stable"
+
+[placeholders.has_settings]
+type = "bool"
+prompt = "Does your auto splitter have settings?"
+default = false
+
+[placeholders.process_name]
+type = "string"
+prompt = "What is the name of the game's executable?"
+default = "explorer.exe"

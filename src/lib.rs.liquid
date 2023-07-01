@@ -1,0 +1,35 @@
+{% if toolchain == "nightly" %}#![feature(type_alias_impl_trait, const_async_blocks)]
+{% endif %}{% unless use_std %}#![no_std]
+{% endunless %}{% if toolchain == "nightly" or use_std == false %}
+{% endif %}use asr::{future::next_tick, Process{% if has_settings %}, Settings{% endif %}};
+
+asr::async_main!({{toolchain}});{% unless use_std %}
+asr::panic_handler!();{% endunless %}{% if has_settings %}
+
+#[derive(Settings)]
+struct Settings {
+    /// My Setting
+    #[default = true]
+    my_setting: bool,
+    // TODO: Change these settings.
+}{% endif %}
+
+async fn main() {
+    // TODO: Set up some general state and settings.{% if has_settings %}
+    let settings = Settings::register();{% endif %}
+
+    asr::print_message("Hello, World!");
+
+    loop {
+        let process = Process::wait_attach("{{ process_name }}").await;
+        process
+            .until_closes(async {
+                // TODO: Load some initial information from the process.
+                loop {
+                    // TODO: Do something on every tick.
+                    next_tick().await;
+                }
+            })
+            .await;
+    }
+}

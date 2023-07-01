@@ -1,0 +1,19 @@
+[build]
+target = "{% if use_wasi %}wasm32-wasi{% else %}wasm32-unknown-unknown{% endif %}"
+rustflags = [
+    # The auto splitting runtime supports all the following WASM features.
+    "-C", "target-feature=+bulk-memory,+mutable-globals,+nontrapping-fptoint,+sign-ext,+simd128",{% if toolchain == "nightly" %}
+    # The following flags are specifically to optimize further on nightly.
+    "-Z", "virtual-function-elimination",
+    "-C", "lto",{% endif %}
+]
+
+[alias]
+# Alias for building an optimized version of the auto splitter.
+# Command: cargo b
+b = [
+    "build", "--release",{% if toolchain == "nightly" %}
+    # The following flags are specifically to optimize further on nightly.
+    "-Z", "build-std=std,panic_abort",
+    "-Z", "build-std-features=panic_immediate_abort",{% endif %}
+]
