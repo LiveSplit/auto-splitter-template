@@ -10,6 +10,7 @@ on:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Commit
@@ -17,17 +18,27 @@ jobs:
 
       - name: Install Rust
         uses: hecrj/setup-rust-action@v1
-        with:
+        with:{% if toolchain == "nightly" %}
+          components: rust-src{% endif %}
           rust-version: {{toolchain}}
           targets: {% if use_wasi %}wasm32-wasi{% else %}wasm32-unknown-unknown{% endif %}
 
       - name: Build
         run: |
-          cargo b
+          cargo b --locked
 
       - name: Test
         run: |
-          cargo test
+          cargo test --locked
+
+      - name: Release
+        if: github.ref == 'refs/heads/master'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: target/{% if use_wasi %}wasm32-wasi{% else %}wasm32-unknown-unknown{% endif %}/release/{{project-name | replace: "-", "_" }}.wasm
+          name: Latest
+          tag_name: latest
+          body: This contains the latest version of the auto splitter.
 
   clippy:
     name: Check clippy lints
@@ -40,6 +51,7 @@ jobs:
         uses: hecrj/setup-rust-action@v1
         with:
           components: clippy
+          targets: {% if use_wasi %}wasm32-wasi{% else %}wasm32-unknown-unknown{% endif %}
 
       - name: Run Clippy
         run: cargo clippy --all-features

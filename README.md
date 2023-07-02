@@ -31,3 +31,5 @@ You are now ready to create your auto splitter from the template:
 ```sh
 cargo generate LiveSplit/auto-splitter-template
 ```
+
+Further instructions are available in the auto splitter's README.
