@@ -10,6 +10,18 @@
 			],
 			"group": "build",
 			"label": "Build Auto Splitter"
+		},
+		{
+			"label": "Debug Auto Splitter",
+			"type": "process",
+			"problemMatcher": [],
+			// Install the asr-debugger with:
+			// cargo install --git https://github.com/CryZe/asr-debugger
+			"command": "asr-debugger",
+			"args": [
+				"target${pathSeparator}{% if use_wasi %}wasm32-wasi{% else %}wasm32-unknown-unknown{% endif %}${pathSeparator}release${pathSeparator}{{project-name | replace: "-", "_" }}.wasm",
+			],
+			"dependsOn": "Build Auto Splitter"
 		}
 	]
 }
