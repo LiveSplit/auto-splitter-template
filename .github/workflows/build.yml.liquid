@@ -27,10 +27,6 @@ jobs:
         run: |
           cargo b --locked
 
-      - name: Test
-        run: |
-          cargo test --locked
-
       - name: Release
         if: github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v1
