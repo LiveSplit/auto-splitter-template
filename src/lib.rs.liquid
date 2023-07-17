@@ -15,6 +15,11 @@ struct Settings {
 }{% endif %}
 
 async fn main() {
+{%- if use_std %}
+    std::panic::set_hook(Box::new(|panic_info| {
+        asr::print_message(&panic_info.to_string());
+    }));
+{% endif %}
     // TODO: Set up some general state and settings.{% if has_settings %}
     let mut settings = Settings::register();{% endif %}
 
