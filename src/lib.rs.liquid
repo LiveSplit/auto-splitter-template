@@ -1,7 +1,7 @@
 {% if toolchain == "nightly" %}#![feature(type_alias_impl_trait, const_async_blocks)]
 {% endif %}{% unless use_std %}#![no_std]
 {% endunless %}{% if toolchain == "nightly" or use_std == false %}
-{% endif %}use asr::{future::next_tick, Process{% if has_settings %}, Settings{% endif %}};
+{% endif %}use asr::{future::next_tick{% if platform == "unity" %}, game_engine::unity::il2cpp::{Module, Version}{% endif %}{% if has_settings %}, user_settings::Settings{% endif %}, Process};
 
 asr::async_main!({{toolchain}});{% unless use_std %}
 asr::panic_handler!();{% endunless %}{% if has_settings %}
@@ -24,7 +24,11 @@ async fn main() {
         let process = Process::wait_attach("{{ process_name }}").await;
         process
             .until_closes(async {
-                // TODO: Load some initial information from the process.
+                {% if platform == "unity" %}// TODO: Change this to use the correct version of IL2CPP (or mono backend).
+                let module = Module::wait_attach(&process, Version::V2020).await;
+                let image = module.wait_get_default_image(&process).await;
+
+                {% endif %}// TODO: Load some initial information from the process.
                 loop {
                     // TODO: Do something on every tick.
                     next_tick().await;

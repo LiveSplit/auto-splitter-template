@@ -8,15 +8,17 @@ edition = "2021"
 [dependencies]
 asr = { git = "https://github.com/LiveSplit/asr", features = [
     {% unless use_std %}# {% endunless %}"alloc", # Working with allocations.
-    {% unless has_settings %}# {% endunless %}"derive", # Defining your own settings structs and converting endianness.
+    {% unless has_settings %}# {% endunless %}"derive", # Defining your own settings structs, converting endianness, and binding to .NET classes.
     # "flags", # Working with bit flags.
     # "float-vars", # Setting floating point variables.
     # "float-vars-small", # Setting floating point variables (small binary size).
     # "integer-vars", # Setting integer variables.
     # "signature", # Scanning signatures.
-    # "gba", # Accessing Game Boy Advance emulators.
-    # "genesis", # Accessing Genesis emulators.
-    # "ps1", # Accessing PlayStation emulators.
+    {% if use_wasi == false or use_std == true %}# {% endif %}"wasi-no-std", # Support for no_std on WASI.
+    {% unless platform == "unity" %}# {% endunless %}"unity", # Accessing games using the Unity engine.
+    {% unless platform == "gba" %}# {% endunless %}"gba", # Accessing Game Boy Advance emulators.
+    {% unless platform == "genesis" %}# {% endunless %}"genesis", # Accessing Genesis emulators.
+    {% unless platform == "ps1" %}# {% endunless %}"ps1", # Accessing PlayStation emulators.
 ] }
 
 # Bytemuck can be used to define structs that are being read from the game's process.

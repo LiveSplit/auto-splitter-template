@@ -23,3 +23,9 @@ default = false
 type = "string"
 prompt = "What is the name of the game's executable?"
 default = "explorer.exe"
+
+[placeholders.platform]
+type = "string"
+prompt = "Which platform / game engine does the game use?"
+choices = ["neither", "unity", "gba", "genesis", "ps1"]
+default = "neither"
