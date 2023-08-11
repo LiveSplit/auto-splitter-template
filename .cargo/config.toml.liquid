@@ -1,11 +1,12 @@
 [build]
 target = "{% if use_wasi %}wasm32-wasi{% else %}wasm32-unknown-unknown{% endif %}"
 rustflags = [
-    # The auto splitting runtime supports all the following WASM features.
-    "-C", "target-feature=+bulk-memory,+mutable-globals,+nontrapping-fptoint,+sign-ext,+simd128",{% if toolchain == "nightly" %}
+    # The auto splitting runtime supports all the following WASM features.{% if toolchain == "nightly" %}
+    "-C", "target-feature=+bulk-memory,+mutable-globals,+nontrapping-fptoint,+sign-ext,+simd128,+multivalue",
     # The following flags are specifically to optimize further on nightly.
     "-Z", "virtual-function-elimination",
-    "-C", "lto",{% endif %}
+    "-C", "lto",{% else %}
+    "-C", "target-feature=+bulk-memory,+mutable-globals,+nontrapping-fptoint,+sign-ext,+simd128",{% endif %}
 ]
 
 [alias]
@@ -14,6 +15,7 @@ rustflags = [
 b = [
     "build", "--release",{% if toolchain == "nightly" %}
     # The following flags are specifically to optimize further on nightly.
+    # The `multivalue` target feature also requires you to build std yourself.
     "-Z", "build-std=std,panic_abort",
     "-Z", "build-std-features=panic_immediate_abort",{% endif %}
 ]
