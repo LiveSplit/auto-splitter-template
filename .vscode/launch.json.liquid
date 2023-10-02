@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug Auto Splitter",
+			// Install the asr-debugger with:
+			// cargo install --locked --git https://github.com/CryZe/asr-debugger
+            "program": "asr-debugger",
+            "args": [
+                "target${pathSeparator}{% if use_wasi %}wasm32-wasi{% else %}wasm32-unknown-unknown{% endif %}${pathSeparator}debug${pathSeparator}{{project-name | replace: "-", "_" }}.wasm"
+            ],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

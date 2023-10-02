@@ -11,8 +11,8 @@ rustflags = [
 
 [alias]
 # Alias for building an optimized version of the auto splitter.
-# Command: cargo b
-b = [
+# Command: cargo release
+release = [
     "build", "--release",{% if toolchain == "nightly" %}
     # The following flags are specifically to optimize further on nightly.
     # The `multivalue` target feature also requires you to build std yourself.
