@@ -1,12 +1,12 @@
 {% if toolchain == "nightly" %}#![feature(type_alias_impl_trait, const_async_blocks)]
 {% endif %}{% unless use_std %}#![no_std]
 {% endunless %}{% if toolchain == "nightly" or use_std == false %}
-{% endif %}use asr::{future::next_tick{% if platform == "unity" %}, game_engine::unity::il2cpp::{Module, Version}{% endif %}{% if has_settings %}, user_settings::Settings{% endif %}, Process};
+{% endif %}use asr::{future::next_tick{% if platform == "unity" %}, game_engine::unity::il2cpp::{Module, Version}{% endif %}{% if has_settings %}, settings::Gui{% endif %}, Process};
 
 asr::async_main!({{toolchain}});{% unless use_std %}
 asr::panic_handler!();{% endunless %}{% if has_settings %}
 
-#[derive(Settings)]
+#[derive(Gui)]
 struct Settings {
     /// My Setting
     #[default = true]
