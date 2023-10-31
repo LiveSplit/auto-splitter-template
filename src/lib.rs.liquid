@@ -16,7 +16,7 @@ struct Settings {
 
 async fn main() {
     // TODO: Set up some general state and settings.{% if has_settings %}
-    let settings = Settings::register();{% endif %}
+    let mut settings = Settings::register();{% endif %}
 
     asr::print_message("Hello, World!");
 
@@ -30,7 +30,9 @@ async fn main() {
 
                 {% endif %}// TODO: Load some initial information from the process.
                 loop {
-                    // TODO: Do something on every tick.
+                    {% if has_settings %}settings.update();
+
+                    {% endif %}// TODO: Do something on every tick.
                     next_tick().await;
                 }
             })
