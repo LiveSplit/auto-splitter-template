@@ -7,25 +7,35 @@ edition = "2021"
 
 [dependencies]
 asr = { git = "https://github.com/LiveSplit/asr", features = [
-    {% unless use_std %}# {% endunless %}"alloc", # Working with allocations.
+    {% if std_layer == "core" %}# {% endif %}"alloc", # Working with allocations.
     {% unless has_settings %}# {% endunless %}"derive", # Defining your own settings structs, converting endianness, and binding to .NET classes.
     # "flags", # Working with bit flags.
     # "float-vars", # Setting floating point variables.
     # "float-vars-small", # Setting floating point variables (small binary size).
     # "integer-vars", # Setting integer variables.
     # "signature", # Scanning signatures.
-    {% if use_wasi == false or use_std == true %}# {% endif %}"wasi-no-std", # Support for no_std on WASI.
-    {% unless platform == "unity" %}# {% endunless %}"unity", # Accessing games using the Unity engine.
-    {% unless platform == "gba" %}# {% endunless %}"gba", # Accessing Game Boy Advance emulators.
-    {% unless platform == "genesis" %}# {% endunless %}"genesis", # Accessing Genesis emulators.
-    {% unless platform == "ps1" %}# {% endunless %}"ps1", # Accessing PlayStation emulators.
+    {% if use_wasi == false or std_layer == "std" %}# {% endif %}"wasi-no-std", # Support for no_std on WASI.
+    {% unless platform == "Unity" %}# {% endunless %}"unity", # Accessing games using the Unity engine.
+    {% unless platform == "Game Boy Advance" %}# {% endunless %}"gba", # Accessing Game Boy Advance emulators.
+    {% unless platform == "GameCube" %}# {% endunless %}"gcn", # Accessing GameCube emulators.
+    {% unless platform == "SEGA Genesis" %}# {% endunless %}"genesis", # Accessing SEGA Genesis emulators.
+    {% unless platform == "PlayStation 1" %}# {% endunless %}"ps1", # Accessing PlayStation 1 emulators.
+    {% unless platform == "PlayStation 2" %}# {% endunless %}"ps2", # Accessing PlayStation 2 emulators.
+    {% unless platform == "SEGA Master System / GameGear" %}# {% endunless %}"sms", # Accessing SEGA Master System / GameGear emulators.
+    {% unless platform == "Wii" %}# {% endunless %}"wii", # Accessing Wii emulators.
 ] }
 
 # Bytemuck can be used to define structs that are being read from the game's process.
-bytemuck = { version = "1", features = ["derive", "min_const_generics"] }
+bytemuck = { version = "1", features = ["derive", "min_const_generics"] }{% if std_layer == "alloc" %}
+# Heap allocator
+dlmalloc = { version = "0.2.4", features = ["global"] }{% endif %}
 
 [lib]
-crate-type = ["cdylib"]
+crate-type = ["cdylib"]{% if toolchain == "nightly" %}
+
+# LTO is required on nightly, even for the dev profile, because of the rustflags.
+[profile.dev]
+lto = true{% endif %}
 
 [profile.release]
 lto = true

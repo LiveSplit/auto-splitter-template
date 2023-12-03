@@ -1,9 +1,13 @@
 {% if toolchain == "nightly" %}#![feature(type_alias_impl_trait, const_async_blocks)]
-{% endif %}{% unless use_std %}#![no_std]
-{% endunless %}{% if toolchain == "nightly" or use_std == false %}
+{% endif %}{% unless std_layer == "std" %}#![no_std]
+{% endunless %}{% if std_layer == "alloc" %}extern crate alloc;
+
+#[global_allocator]
+static ALLOC: dlmalloc::GlobalDlmalloc = dlmalloc::GlobalDlmalloc;
+{% endif %}{% if toolchain == "nightly" or std_layer == "core" or std_layer == "alloc" %}
 {% endif %}use asr::{future::next_tick{% if platform == "unity" %}, game_engine::unity::il2cpp::{Module, Version}{% endif %}{% if has_settings %}, settings::Gui{% endif %}, Process};
 
-asr::async_main!({{toolchain}});{% unless use_std %}
+asr::async_main!({{toolchain}});{% unless std_layer == "std" %}
 asr::panic_handler!();{% endunless %}{% if has_settings %}
 
 #[derive(Gui)]

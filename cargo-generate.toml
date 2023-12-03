@@ -3,10 +3,11 @@ type = "bool"
 prompt = "Do you want to use WASI? It allows accessing the file system, but it is unstable."
 default = false
 
-[placeholders.use_std]
-type = "bool"
-prompt = "Do you need the full access to the standard library?"
-default = false
+[placeholders.std_layer]
+type = "string"
+prompt = "How much of the standard library do you need? (core = no heap allocations, alloc = heap allocations, std = operating system access (mostly only useful with WASI)"
+choices = ["core", "alloc", "std"]
+default = "core"
 
 [placeholders.toolchain]
 type = "string"
@@ -27,5 +28,5 @@ default = "explorer.exe"
 [placeholders.platform]
 type = "string"
 prompt = "Which platform / game engine does the game use?"
-choices = ["neither", "unity", "gba", "genesis", "ps1"]
-default = "neither"
+choices = ["Neither", "Unity", "Game Boy Advance", "GameCube", "SEGA Genesis", "PlayStation 1", "PlayStation 2", "SEGA Master System / GameGear", "Wii"]
+default = "Neither"

@@ -2,20 +2,18 @@
 target = "{% if use_wasi %}wasm32-wasi{% else %}wasm32-unknown-unknown{% endif %}"
 rustflags = [
     # The auto splitting runtime supports all the following WASM features.{% if toolchain == "nightly" %}
-    "-C", "target-feature=+bulk-memory,+mutable-globals,+nontrapping-fptoint,+sign-ext,+simd128,+multivalue",
+    "-C", "target-feature=+bulk-memory,+mutable-globals,+nontrapping-fptoint,+sign-ext,+simd128,+relaxed-simd,+multivalue",
     # The following flags are specifically to optimize further on nightly.
     "-Z", "virtual-function-elimination",
     "-C", "lto",{% else %}
-    "-C", "target-feature=+bulk-memory,+mutable-globals,+nontrapping-fptoint,+sign-ext,+simd128",{% endif %}
-]
+    "-C", "target-feature=+bulk-memory,+mutable-globals,+nontrapping-fptoint,+sign-ext,+simd128,+relaxed-simd",{% endif %}
+]{% if toolchain == "nightly" %}
 
 [alias]
-# Alias for building an optimized version of the auto splitter.
-# Command: cargo release
-release = [
-    "build", "--release",{% if toolchain == "nightly" %}
-    # The following flags are specifically to optimize further on nightly.
-    # The `multivalue` target feature also requires you to build std yourself.
+# Alias for building on nightly, as multivalue requires std to be built manually.
+# Command: cargo b
+b = [
+    "build",
     "-Z", "build-std=std,panic_abort",
-    "-Z", "build-std-features=panic_immediate_abort",{% endif %}
-]
+    "-Z", "build-std-features=panic_immediate_abort",
+]{% endif %}
