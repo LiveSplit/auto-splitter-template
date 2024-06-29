@@ -1,12 +1,12 @@
 [build]
-target = "{% if use_wasi %}wasm32-wasi{% else %}wasm32-unknown-unknown{% endif %}"
+target = "{% if use_wasi %}wasm32-wasip1{% else %}wasm32-unknown-unknown{% endif %}"
 rustflags = [
     # The auto splitting runtime supports all the following WASM features.{% if toolchain == "nightly" %}
-    "-C", "target-feature=+bulk-memory,+mutable-globals,+nontrapping-fptoint,+sign-ext,+simd128,+relaxed-simd,+multivalue",
+    "-C", "target-feature=+bulk-memory,+mutable-globals,+nontrapping-fptoint,+sign-ext,+simd128,+relaxed-simd,+tail-call,+multivalue",
     # The following flags are specifically to optimize further on nightly.
     "-Z", "virtual-function-elimination",
     "-C", "lto",{% else %}
-    "-C", "target-feature=+bulk-memory,+mutable-globals,+nontrapping-fptoint,+sign-ext,+simd128,+relaxed-simd",{% endif %}
+    "-C", "target-feature=+bulk-memory,+mutable-globals,+nontrapping-fptoint,+sign-ext,+simd128,+relaxed-simd,+tail-call",{% endif %}
 ]{% if toolchain == "nightly" %}
 
 [alias]

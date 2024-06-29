@@ -12,18 +12,18 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    permissions: 
+    permissions:
       contents: write
     steps:
       - name: Checkout Commit
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Rust
-        uses: hecrj/setup-rust-action@v1
+        uses: hecrj/setup-rust-action@v2
         with:{% if toolchain == "nightly" %}
           components: rust-src{% endif %}
           rust-version: {{toolchain}}
-          targets: {% if use_wasi %}wasm32-wasi{% else %}wasm32-unknown-unknown{% endif %}
+          targets: {% if use_wasi %}wasm32-wasip1{% else %}wasm32-unknown-unknown{% endif %}
 
       - name: Build
         run: |
@@ -31,9 +31,9 @@ jobs:
 
       - name: Release
         if: github.ref == 'refs/heads/master'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          files: target/{% if use_wasi %}wasm32-wasi{% else %}wasm32-unknown-unknown{% endif %}/release/{{project-name | replace: "-", "_" }}.wasm
+          files: target/{% if use_wasi %}wasm32-wasip1{% else %}wasm32-unknown-unknown{% endif %}/release/{{project-name | replace: "-", "_" }}.wasm
           name: Latest
           tag_name: latest
           body: This contains the latest version of the auto splitter.
@@ -43,13 +43,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Commit
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Rust
-        uses: hecrj/setup-rust-action@v1
+        uses: hecrj/setup-rust-action@v2
         with:
           components: clippy
-          targets: {% if use_wasi %}wasm32-wasi{% else %}wasm32-unknown-unknown{% endif %}
+          targets: {% if use_wasi %}wasm32-wasip1{% else %}wasm32-unknown-unknown{% endif %}
 
       - name: Run Clippy
         run: cargo clippy --all-features
@@ -59,10 +59,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Commit
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Rust
-        uses: hecrj/setup-rust-action@v1
+        uses: hecrj/setup-rust-action@v2
         with:
           components: rustfmt
 

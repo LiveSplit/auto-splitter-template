@@ -19,7 +19,7 @@ file system, randomness, clocks, and more. If your auto splitter only needs
 access to processes, their memory and the timer, the WASI target is not needed.
 
 ```sh
-rustup target add wasm32-wasi
+rustup target add wasm32-wasip1
 ```
 
 After that you need to install the [`cargo

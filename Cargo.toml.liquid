@@ -41,7 +41,11 @@ lto = true{% endif %}
 lto = true
 panic = "abort"
 codegen-units = 1
-strip = true
+strip = true{% if toolchain == "nightly" %}
+trim-paths = true
+
+[unstable]
+trim-paths = true{% endif %}
 
 [profile.release.build-override]
 opt-level = 0
